@@ -10,18 +10,19 @@ void main() {
     target = container.read(calcProvider.notifier);
   });
 
-  test("riverpod test", (){
+  test("riverpod test1", (){
     expect(target.debugState.text, "0");
-    target.input("2");
-    target.input("3");
-    expect(target.debugState.text, "23");
+    target.input("1");
+    target.input("5");
+    expect(target.debugState.text, "15");
 
   });
   test("riverpod test2", (){
     expect(target.debugState.text, "0");
     target.input("2");
     target.input("3");
-    expect(target.debugState.text, "23");
+    target.input("4");
+    expect(target.debugState.text, "234");
 
   });
 }
