@@ -1,10 +1,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'calc_state.dart';
 
-final calcProvider = StateNotifierProvider((ref) => CalcController());
+final calcProvider = StateNotifierProvider((ref) => CalcController(ref.read));
 
 class CalcController extends StateNotifier<CalcState> {
-  CalcController() : super(CalcState(
+  CalcController(this._read) : super(CalcState(
     text: "0",
   ));
 
@@ -15,4 +15,6 @@ class CalcController extends StateNotifier<CalcState> {
       state = state.copyWith(text: state.text + text);
     }
   }
+
+  final Reader _read;
 }
