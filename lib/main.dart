@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tdd_sample/logic.dart';
+import 'package:tdd_sample/models/calc_controller.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,20 +18,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePage extends HookWidget {
   // 色の定義
   static const Color colorMain = Colors.black;
   static const Color colorNum = Colors.white10;
@@ -36,7 +31,6 @@ class _MyHomePageState extends State<MyHomePage> {
   static const Color colorCalc = Colors.orange;
   static const Color colorText = Colors.white;
 
-  String txtResult = "0";
 
   static const Map<String, IconData> _mapIcon = {
     "+/-": CupertinoIcons.plus_slash_minus,
@@ -48,9 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
     "=": CupertinoIcons.equal,
   };
 
-  Logic _logic = Logic();
-
-  Widget Button(String text, Color colorButton, Color colorText) {
+  Widget button(String text, Color colorButton, Color colorText) {
+    final controller = useProvider(calcProvider.notifier);
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: ElevatedButton(
@@ -72,10 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           onPressed: () {
-            _logic.input(text);
-            setState(() {
-              txtResult = _logic.text;
-            });
+            controller.input(text);
           },
           style: ElevatedButton.styleFrom(
             primary: colorButton,
@@ -86,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget build(BuildContext context) {
+    final text = useProvider(calcProvider.select((value) => value.text));
     return Scaffold(
       backgroundColor: colorMain,
       body: Container(
@@ -97,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    txtResult,
+                    text,
                     style: const TextStyle(
                       color: colorText,
                       fontSize: 60,
@@ -111,45 +102,45 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Expanded(child: Button("C", colorFunc, colorMain)),
-                Expanded(child: Button("+/-", colorFunc, colorMain)),
-                Expanded(child: Button("%", colorFunc, colorMain)),
-                Expanded(child: Button("/", colorCalc, colorText)),
+                Expanded(child: button("C", colorFunc, colorMain)),
+                Expanded(child: button("+/-", colorFunc, colorMain)),
+                Expanded(child: button("%", colorFunc, colorMain)),
+                Expanded(child: button("/", colorCalc, colorText)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Expanded(child: Button("7", colorNum, colorText)),
-                Expanded(child: Button("8", colorNum, colorText)),
-                Expanded(child: Button("9", colorNum, colorText)),
-                Expanded(child: Button("x", colorCalc, colorText)),
+                Expanded(child: button("7", colorNum, colorText)),
+                Expanded(child: button("8", colorNum, colorText)),
+                Expanded(child: button("9", colorNum, colorText)),
+                Expanded(child: button("x", colorCalc, colorText)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Expanded(child: Button("4", colorNum, colorText)),
-                Expanded(child: Button("5", colorNum, colorText)),
-                Expanded(child: Button("6", colorNum, colorText)),
-                Expanded(child: Button("-", colorCalc, colorText)),
+                Expanded(child: button("4", colorNum, colorText)),
+                Expanded(child: button("5", colorNum, colorText)),
+                Expanded(child: button("6", colorNum, colorText)),
+                Expanded(child: button("-", colorCalc, colorText)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Expanded(child: Button("1", colorNum, colorText)),
-                Expanded(child: Button("2", colorNum, colorText)),
-                Expanded(child: Button("3", colorNum, colorText)),
-                Expanded(child: Button("+", colorCalc, colorText)),
+                Expanded(child: button("1", colorNum, colorText)),
+                Expanded(child: button("2", colorNum, colorText)),
+                Expanded(child: button("3", colorNum, colorText)),
+                Expanded(child: button("+", colorCalc, colorText)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Button("0", colorNum, colorText),
-                Expanded(child: Button(".", colorNum, colorText)),
-                Expanded(child: Button("=", colorCalc, colorText)),
+                button("0", colorNum, colorText),
+                Expanded(child: button(".", colorNum, colorText)),
+                Expanded(child: button("=", colorCalc, colorText)),
               ],
             ),
           ],

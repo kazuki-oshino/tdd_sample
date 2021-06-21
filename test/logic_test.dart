@@ -1,34 +1,27 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tdd_sample/logic.dart';
+import 'package:tdd_sample/models/calc_controller.dart';
 
 void main() {
 
-  late Logic logic;
+  test("riverpod test", (){
+    final target = CalcController();
+    expect(target.debugState.text, "0");
+    target.input("2");
+    target.input("3");
+    expect(target.debugState.text, "23");
 
-  setUp(() {
-    logic = Logic();
   });
 
-  test("1をそのまま出力", () {
-    logic.input("1");
-    expect(logic.text, "1");
+  test("riverpod test2", (){
+    final target = CalcController();
+    expect(target.debugState.text, "0");
+    target.input("2");
+    target.input("3");
+    expect(target.debugState.text, "23");
+
   });
 
-  test("2そのまま出力", () {
-    logic.input("2");
-    expect(logic.text, "2");
-  });
-
-  test("3そのまま出力", () {
-    logic.input("3");
-    expect(logic.text, "3");
-  });
-
-  test("連続入力", () {
-    expect(logic.text, "0");
-    logic.input("3");
-    expect(logic.text, "3");
-    logic.input("2");
-    expect(logic.text, "32");
-  });
 }
